@@ -39,7 +39,8 @@ class APICaller
     }
     
     // 取得即時迷因資料
-    func retrieveMemeData(completionHandler: @escaping (MemeData?) -> () ) {
+    func retrieveMemeData(completionHandler:
+                          @escaping (MemeData?) -> () ) {
         guard let url = URL(string: "https://some-random-api.ml/meme") else { return }
         
         URLSession.shared.dataTask(with: URLRequest(url: url)) {
@@ -60,27 +61,29 @@ class APICaller
     }
     
     
-    func retrieveGenericPrepare(completion: @escaping (Result<MemeData,Error>) -> Void) {
-        // 先有 url 的 string, 再有 url
+    func retrieveGenericPrepare(completion:
+                                @escaping (Result<MemeData,Error>) -> Void) {
+        // 先有url的string, 再有url
         guard let url = URL(string: "https://some-random-api.ml/meme") else { return }
-        // 創建 urlSession, 利用 request
+        // 創建urlSession, 利用request
         URLSession.shared.dataTask(with: URLRequest(url: url)) {
             data, resp, err in
-            // 當有 data 且 錯誤為 nil 時
+            // 當有data 且 錯誤為nil時
             guard let data = data, err == nil else { return }
             
             do {
-                // 解析這個 JSON 格式的 data 為我們的Model, 將結果裝到常數result中
-                // 因為 decode 會 throw 我們的要解析的物件, 所以用 try 試試看
-                let result = try JSONDecoder().decode(MemeData.self, from: data)
-                // 逃逸閉包裡帶入 result
+                // 解析這個JSON格式的 data 為我們的Model, 將結果裝到常數result中
+                // 因為decode會 throw 我們的要解析的物件, 所以用try試試看
+                let result = try JSONDecoder().decode(MemeData.self,
+                                                      from: data)
+                // 逃逸閉包裡帶入result
                 completion(Result.success(result))
                 print(result)
             }
             catch {
-                // 逃逸閉包裡帶入 error
+                // 逃逸閉包裡帶入error
                 completion(Result.failure(error))
-                // error 加上 .localizedDescription 可以顯示出客製化的錯誤訊息
+                // error加上.localizedDescription可以顯示出客製化的錯誤訊息
                 print(error.localizedDescription)
             }
             
